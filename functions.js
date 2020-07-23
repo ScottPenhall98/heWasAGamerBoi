@@ -63,15 +63,35 @@ function displayGames(){
 }
 
 function addGraph(canvas, totalCost){
-    var widthOfGraphCanvas = 1400
-    var heightOfGraphCanvas = 700
-    var widthOffset = 200
-    var ctx = canvas.getContext("2d");
+    let widthOfGraphCanvas = 1400
+    let heightOfGraphCanvas = 700
+    let widthOffset = 200
+    let ctx = canvas.getContext("2d");
     ctx.beginPath()
     ctx.lineWidth = "2";
-    ctx.strokeStyle = "Black";
+    ctx.strokeStyle = "Red";
     ctx.rect(widthOffset, 0, widthOfGraphCanvas, heightOfGraphCanvas)
     ctx.stroke()
+    //get the width of the canvas and split it up by the length of allConsoles
+    addBars(widthOfGraphCanvas,ctx)
+    
+}
+
+function addBars(widthOfGraphCanvas,ctx){
+    let widthOfBars = widthOfGraphCanvas / allConsoles.length
+    let widthBetweenBars = 10
+    let startLeft = 225
+    let startHeight = 650
+    let heightIncrement = 10
+    for(var i = 0; i < allConsoles.length; i++){
+        ctx.beginPath()
+        ctx.fillStyle = "Red";
+        ctx.fillRect(startLeft, 50, widthOfBars - widthBetweenBars ,startHeight)
+        startLeft += widthOfBars
+        startHeight += heightIncrement
+        ctx.stroke()
+    }
+   
 }
 
 function addTextToCanvas(canvas, totalCost){
@@ -79,10 +99,10 @@ function addTextToCanvas(canvas, totalCost){
     ctx.font = "20px Arial";
     ctx.fillText(("$" + totalCost), 10, 790);
     ctx.beginPath()
-    ctx.lineWidth = "2";
-    ctx.strokeStyle = "Black";
-    ctx.rect(200, 0, 1400, 700)
-    ctx.stroke()
+//     ctx.lineWidth = "2";
+//     ctx.strokeStyle = "Black";
+//     ctx.rect(200, 0, 1400, 700)
+//     ctx.stroke()
 }
 
 function changePricesToDollars(){
