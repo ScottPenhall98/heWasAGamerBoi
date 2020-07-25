@@ -71,31 +71,31 @@ function addGraph(canvas, totalCost){
     let ctx = canvas.getContext("2d");
     ctx.beginPath()
     ctx.lineWidth = "2";
-    ctx.strokeStyle = "Red";
+    ctx.strokeStyle = "black";
     ctx.rect(widthOffset, 0, widthOfGraphCanvas + widthBetweenBars, heightOfGraphCanvas)
     ctx.stroke()
     //get the width of the canvas and split it up by the length of allConsoles
-    addBars(widthOfGraphCanvas,widthBetweenBars,totalCost,ctx)
+    addBars(heightOfGraphCanvas,widthOfGraphCanvas,widthBetweenBars,totalCost,ctx)
     
 }
 
-function addBars(widthOfGraphCanvas, widthBetweenBars, totalCost, ctx){
+function addBars(heightOfGraphCanvas,widthOfGraphCanvas, widthBetweenBars, totalCost, ctx){
     let widthOfBars = widthOfGraphCanvas / allConsoles.length
     let startLeft = 140
     let startHeight = 650
     let heightIncrement = 10
     let highestPercentage = {
-        consoleName = allConsoles[0],
-        percent = displayObject[allConsoles[0]]
+        consoleName : allConsoles[0],
+        percentage: displayObject[allConsoles[0]] / (totalCost / 100)
     }
     let allPercentages = []
     for (let i = 0; i < allConsoles.length; i++) {
         let percentage = displayObject[allConsoles[i]] / (totalCost / 100)
         allPercentages[allConsoles[i]] = percentage
-        if(percentage > highestPercentage){
+        if(percentage > highestPercentage.percentage){
             highestPercentage = {
-                consoleName = allConsoles[i],
-                percentage = percentage
+                consoleName : allConsoles[i],
+                percentage : percentage
             }
         }
     }
@@ -104,9 +104,18 @@ function addBars(widthOfGraphCanvas, widthBetweenBars, totalCost, ctx){
     for(let i = 0; i < allConsoles.length; i++){
         //percentage = price from console / 1 percent of total cost (1 percent = total cost/100)
         let percentage = allPercentages[allConsoles[i]]
+        //grab one percent of what the scale we use
+        //scaler is to scale on the highest value as it might not be close to 100
+        let scaler = heightOfGraphCanvas / percentageHeightOfGraph
+        let heightOfBar = percentage * scaler
         ctx.beginPath()
-        ctx.fillStyle = "Red";
-        ctx.fillRect(startLeft + widthOfBars, 50, widthOfBars - widthBetweenBars ,startHeight)
+        if (allConsoles[i] === "Nintendo Switch"){
+            // checkIfItIsHighest. at this time it is the highest value in the data 
+            ctx.fillStyle = "Blue";
+        }else{
+            ctx.fillStyle = "Red";
+        }
+        ctx.fillRect(startLeft + widthOfBars, heightOfGraphCanvas - heightOfBar, widthOfBars - widthBetweenBars, heightOfBar)
         startLeft += widthOfBars
         startHeight += heightIncrement
         ctx.stroke()
