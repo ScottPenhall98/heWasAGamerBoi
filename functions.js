@@ -97,8 +97,8 @@ function addBars(heightOfGraphCanvas,widthOfGraphCanvas, widthBetweenBars, width
         }
     }
     //the biggest graph has to have 25 BELLOW the top bar
-    let percentageHeightOfGraph = highestPercentage.percentage + (highestPercentage.percentage / 4)
-    makeLines(heightOfGraphCanvas, widthOfGraphCanvas, widthOffset,widthBetweenBars,highestPercentage,totalCost,ctx)
+    let percentageHeightOfGraph = highestPercentage.percentage + (highestPercentage.percentage / 30)
+    makeLines(heightOfGraphCanvas, widthOfGraphCanvas, widthOffset,widthBetweenBars,percentageHeightOfGraph,totalCost,ctx)
     for(let i = 0; i < allConsoles.length; i++){
         //percentage = price from console / 1 percent of total cost (1 percent = total cost/100)
         let percentage = allPercentages[allConsoles[i]]
@@ -137,11 +137,11 @@ function addTextToCanvas(ctx, consoleName, x,heightOfGraphCanvas,widthOfBars){
     ctx.beginPath()
 }
 
-function makeLines(heightOfGraphCanvas, widthOfGraphCanvas,widthOffset,widthBetweenBars,highestPercentage, totalCost,ctx){
+function makeLines(heightOfGraphCanvas, widthOfGraphCanvas,widthOffset,widthBetweenBars,percentageHeightOfGraph, totalCost,ctx){
     let numberOfLines = 20
     let fontSize = 12
     ctx.font = fontSize + "px Arial";
-    let topPrice = Math.round(totalCost / 100 * highestPercentage.percentage)
+    let topPrice = Math.round(totalCost / 100 * percentageHeightOfGraph) //would always be the same 
     ctx.fillText(('$' + topPrice), widthOffset - ctx.measureText('$' + topPrice).width - 5, fontSize); //string,x,y, maxwidth
     let newLine = heightOfGraphCanvas / numberOfLines
     let price = topPrice / numberOfLines
