@@ -5,7 +5,6 @@
 
 //make a graph that displays all data by a given platform
 
-//remove pal
 const MyData = data
 let displayObject = {}
 let allConsoles = []
@@ -58,7 +57,7 @@ function displayGames(){
         style: ["border:2px solid #000000"]
     }
     canvas = setElementAttribute(canvas, attributes)
-    addTextToCanvas(canvas, totalCost)
+    // addTextToCanvas(canvas, totalCost)
     addGraph(canvas,totalCost)
     document.body.appendChild(canvas)
 }
@@ -82,7 +81,6 @@ function addGraph(canvas, totalCost){
 function addBars(heightOfGraphCanvas,widthOfGraphCanvas, widthBetweenBars, totalCost, ctx){
     let widthOfBars = widthOfGraphCanvas / allConsoles.length
     let startLeft = 140
-    let startHeight = 650
     let heightIncrement = 10
     let highestPercentage = {
         consoleName : allConsoles[0],
@@ -116,16 +114,24 @@ function addBars(heightOfGraphCanvas,widthOfGraphCanvas, widthBetweenBars, total
             ctx.fillStyle = "Red";
         }
         ctx.fillRect(startLeft + widthOfBars, heightOfGraphCanvas - heightOfBar, widthOfBars - widthBetweenBars, heightOfBar)
-        startLeft += widthOfBars
-        startHeight += heightIncrement
         ctx.stroke()
+        addTextToCanvas(ctx, allConsoles[i], startLeft + widthOfBars,heightOfGraphCanvas,widthOfBars - widthBetweenBars)
+        startLeft += widthOfBars
     }
 }
 
-function addTextToCanvas(canvas, totalCost){
-    let ctx = canvas.getContext("2d");
-    ctx.font = "20px Arial";
-    ctx.fillText(("$" + totalCost), 10, 790);
+function addTextToCanvas(ctx, consoleName, x,heightOfGraphCanvas,widthOfBars){
+    let fontSize = 15
+    ctx.font = fontSize+"px Arial";
+    let fullWords = consoleName.split(" ")
+    let newLine = 0
+    for(let i = 0; i < fullWords.length; i++){
+        ctx.fillText(fullWords[i], x, heightOfGraphCanvas + 30 + newLine, widthOfBars); //string,x,y, maxwidth
+        newLine = newLine + fontSize + 2
+        if(i!==fullWords.length - 1){
+            ctx.fillText('\n', x, heightOfGraphCanvas + 30, widthOfBars);
+        }
+    }
     ctx.beginPath()
 }
 
