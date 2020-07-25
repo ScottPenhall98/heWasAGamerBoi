@@ -74,14 +74,13 @@ function addGraph(canvas, totalCost){
     ctx.rect(widthOffset, 0, widthOfGraphCanvas + widthBetweenBars, heightOfGraphCanvas)
     ctx.stroke()
     //get the width of the canvas and split it up by the length of allConsoles
-    addBars(heightOfGraphCanvas,widthOfGraphCanvas,widthBetweenBars,totalCost,ctx)
+    addBars(heightOfGraphCanvas,widthOfGraphCanvas,widthBetweenBars,widthOffset,totalCost,ctx)
     
 }
 
-function addBars(heightOfGraphCanvas,widthOfGraphCanvas, widthBetweenBars, totalCost, ctx){
+function addBars(heightOfGraphCanvas,widthOfGraphCanvas, widthBetweenBars, widthOffset,totalCost, ctx){
     let widthOfBars = widthOfGraphCanvas / allConsoles.length
     let startLeft = 140
-    let heightIncrement = 10
     let highestPercentage = {
         consoleName : allConsoles[0],
         percentage: displayObject[allConsoles[0]] / (totalCost / 100)
@@ -99,6 +98,7 @@ function addBars(heightOfGraphCanvas,widthOfGraphCanvas, widthBetweenBars, total
     }
     //the biggest graph has to have 25 BELLOW the top bar
     let percentageHeightOfGraph = highestPercentage.percentage + (highestPercentage.percentage / 4)
+    makeLines(heightOfGraphCanvas, widthOfGraphCanvas, widthOffset,widthBetweenBars,highestPercentage,totalCost,ctx)
     for(let i = 0; i < allConsoles.length; i++){
         //percentage = price from console / 1 percent of total cost (1 percent = total cost/100)
         let percentage = allPercentages[allConsoles[i]]
@@ -117,6 +117,8 @@ function addBars(heightOfGraphCanvas,widthOfGraphCanvas, widthBetweenBars, total
         ctx.stroke()
         addTextToCanvas(ctx, allConsoles[i], startLeft + widthOfBars,heightOfGraphCanvas,widthOfBars - widthBetweenBars)
         startLeft += widthOfBars
+        //todo get lines for good price points
+        
     }
 }
 
@@ -133,6 +135,29 @@ function addTextToCanvas(ctx, consoleName, x,heightOfGraphCanvas,widthOfBars){
         }
     }
     ctx.beginPath()
+}
+
+function makeLines(heightOfGraphCanvas, widthOfGraphCanvas,widthOffset,widthBetweenBars,highestPercentage, totalCost,ctx){
+    let numberOfLines = 20
+    let fontSize = 12
+    ctx.font = fontSize + "px Arial";
+    let topPrice = Math.round(totalCost / 100 * highestPercentage.percentage)
+    ctx.fillText(('$' + topPrice), widthOffset - ctx.measureText('$' + topPrice).width - 5, fontSize); //string,x,y, maxwidth
+    let newLine = heightOfGraphCanvas / numberOfLines
+    let price = topPrice / numberOfLines
+    let currentPrice = topPrice - price
+    let currentLine = newLine
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "Gray";
+    for(let i = 0; i < numberOfLines; i++){
+        ctx.beginPath();
+        ctx.fillText(('$' + Math.round(currentPrice)), widthOffset - ctx.measureText('$' + topPrice).width - 5, fontSize + currentLine)
+        ctx.moveTo(widthOffset, currentLine);
+        ctx.lineTo(widthOfGraphCanvas + widthOffset + widthBetweenBars, currentLine);
+        currentLine += newLine
+        currentPrice -= price
+        ctx.stroke();
+    }
 }
 
 function changePricesToDollars(){
